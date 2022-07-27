@@ -1,0 +1,13 @@
+note over browser:
+submit button is pressed
+end note
+
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+server-->browser: 201 Created
+
+note over browser:
+the note is fetched from the form-element.
+the new note list is rendered with the 
+client-side js-code, therefore we only face 
+one request.
+end note
