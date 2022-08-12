@@ -16,7 +16,7 @@ const Button = (props) => {
     )
 }
 
-const App = () => {
+const App2 = () => {
     const anecdotes = [
         'If it hurts, do it more often.',
         'Adding manpower to a late software project makes it later!',
@@ -54,4 +54,4 @@ const App = () => {
     )
 }
 
-export default App
+export default App2
