@@ -28,7 +28,7 @@ const notes = [
 ReactDOM.createRoot(document.getElementById('root')).render(
 	<>
 		<App />
-		{/* <App1 /> */}
+		<App1 />
 	</>	
 );
 
