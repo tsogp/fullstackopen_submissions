@@ -1,0 +1,1 @@
+exercises 2.1-2.5 are are defined in App.js file
