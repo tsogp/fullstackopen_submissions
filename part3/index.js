@@ -1,8 +1,7 @@
 const User = require('./models/user')
 
-const express = require('express')
 const cors = require('cors')
-
+const express = require('express')
 const morgan = require('morgan')
 morgan.token('body', (req) => {
     return JSON.stringify(req['body'])
@@ -10,8 +9,8 @@ morgan.token('body', (req) => {
 
 const app = express()
 app.use(express.json())
-app.use(express.static('build'))
 app.use(cors())
+app.use(express.static('build'))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 app.get('/api/persons', (request, response, next) => {
@@ -25,14 +24,16 @@ app.get('/api/persons', (request, response, next) => {
 app.put('/api/persons/:id', (request, response, next) => {
     const user = {
         name: request.body.name,
-        number: request.body.number
+        number: request.body.number,
     }
 
-    User.findOneAndUpdate({ name: request.body.name }, user, { new: true })
-        .then(updatedNote => {
-            response.json(updatedNote).end()
-        })
-        .catch(error => next(error))
+    User.findByIdAndUpdate(
+        request.params.id,
+        user,
+        { new: true, runValidators: true, context: 'query'}
+    ).then(updatedNote => {
+        response.json(updatedNote)
+    }).catch(error => next(error))
 })
 
 app.get('/api/persons/:id', (request, response, next) => {
@@ -52,12 +53,6 @@ app.delete('/api/persons/:id', (request, response, next) => {
 })
 
 app.post('/api/persons', (request, response, next) => {
-    if (!request.body.name || !request.body.number) {
-        return response.status(400).json({
-            error: "name or number are missing"
-        })
-    }
-
     const user = new User({
         name: request.body.name,
         number: request.body.number,
@@ -65,26 +60,32 @@ app.post('/api/persons', (request, response, next) => {
     })
 
     user.save()
-        .then(() => {
-            console.log('user saved!')
+        .then(savedNote => {
+            response.json(savedNote)
         })
         .catch(error => next(error))
-
-    response.json(user)
 })
 
-const PORT = process.env.PORT || 3001
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
-})
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ 'error': 'unknown endpoint' })
+}
+app.use(unknownEndpoint)
 
 const errorHandler = (error, request, response, next) => {
     console.error(error.message)
 
     if (error.name === 'CastError') {
         return response.status(400).send({ error: 'malformatted id' })
+    } else if (error.name === 'ValidationError' || error.name === 'AxiosError') {
+        return response.status(400).send({ error: error.message })
     }
 
     next(error)
 }
 app.use(errorHandler)
+
+const PORT = process.env.PORT || 3001
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`)
+})
+

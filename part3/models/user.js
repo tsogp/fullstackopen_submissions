@@ -12,9 +12,23 @@ mongoose
     })
 
 const userSchema = new mongoose.Schema({
-    name: String,
-    number: String,
-    date: Date,
+    name: {
+        type: String,
+        minLength: 3,
+        required: true
+    },
+    number: {
+        type: String,
+        minLength: 8,
+        required: true,
+        validate: (v) => {
+            return v.indexOf('-') === v.lastIndexOf('-') && v.indexOf('-') >= 2 && v.indexOf('-') <= v.length - 3
+        }
+    },
+    date: {
+        type: Date,
+        required: true
+    }
 })
 
 userSchema.set('toJSON', {
