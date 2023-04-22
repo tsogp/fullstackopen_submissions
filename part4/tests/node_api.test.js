@@ -77,3 +77,19 @@ test('id row exists', async () => {
   
     expect(response.body[0]._id).toBeDefined()
 });
+
+test('post creates new blog', async () => {
+    const initialState = await api.get('/api/blogs')
+    
+    const blog = new Blog({
+        title: "lol221",
+        author: "anthony pro",
+        url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
+        likes: -1,
+    })
+    await blog.save();
+    
+    const currentState = await api.get('/api/blogs')
+  
+    expect(initialState.body.length).toEqual(currentState.body.length - 1)
+});
