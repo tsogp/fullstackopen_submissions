@@ -71,3 +71,9 @@ test('a specific blog is within the returned notes', async () => {
       'React patterns'
     )
 });
+
+test('id row exists', async () => {
+    const response = await api.get('/api/blogs')
+  
+    expect(response.body[0]._id).toBeDefined()
+});
