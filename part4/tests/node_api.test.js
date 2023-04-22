@@ -112,3 +112,12 @@ test('no title or no url => 400 bad request', async () => {
         .expect(400)
 });
 
+test('delete returns 204', async () => {
+    const response = await api.get('/api/blogs')
+    
+    await api
+        .delete(`/api/blogs/${response.body[0]._id}`)
+        .expect(204)
+});
+
+
