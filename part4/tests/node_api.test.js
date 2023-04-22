@@ -120,4 +120,17 @@ test('delete returns 204', async () => {
         .expect(204)
 });
 
+test('put returns 201', async () => {
+    const response = await api.get('/api/blogs') 
+    await api
+        .put(`/api/blogs/${response.body[0]._id}`)
+        .send({
+            "title": "lol222",
+            "url": "lol222",
+            "likes": 221
+        })
+        .expect(201)
+    
+});
+
 
