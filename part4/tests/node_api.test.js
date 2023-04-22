@@ -99,3 +99,16 @@ test('default like is 0', async () => {
     expect(response.body[5].likes).toEqual(0)
 });
 
+test('no title or no url => 400 bad request', async () => {
+    const blog = new Blog({
+        title: "lol221",
+        url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
+        likes: -1,
+    })
+    
+    await api
+        .post("/api/blogs")
+        .send(blog)
+        .expect(400)
+});
+
