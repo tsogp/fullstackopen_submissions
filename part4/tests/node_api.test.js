@@ -44,7 +44,6 @@ const blogs = [
       title: "Type wars",
       author: "Robert C. Martin",
       url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
-      likes: 2,
     }  
 ]
 
@@ -93,3 +92,10 @@ test('post creates new blog', async () => {
   
     expect(initialState.body.length).toEqual(currentState.body.length - 1)
 });
+
+test('default like is 0', async () => {
+    const response = await api.get('/api/blogs')
+  
+    expect(response.body[5].likes).toEqual(0)
+});
+
