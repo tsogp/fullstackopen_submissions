@@ -7,6 +7,9 @@ const App = () => {
 	const [blogs, setBlogs] = useState([])
 	const [username, setUsername] = useState('')
 	const [password, setPassword] = useState('')
+	const [title, setTitle] = useState('')
+	const [author, setAuthor] = useState('')
+	const [url, setUrl] = useState('')
 	const [user, setUser] = useState(null)
 
 	useEffect(() => {
@@ -40,13 +43,66 @@ const App = () => {
 		}
 	}
 
-	const handleLogout = (event) => {
+	const handleCreateBlog = async (event) => {
 		event.preventDefault();
 
+		try {
+			const blog = await blogService.create({ title, author, url })
+
+			setTitle('')
+			setAuthor('')
+			setUrl('')
+			setBlogs(blogs.concat(blog))
+		} catch (exception) {
+			console.log('wrong credentials or no title or author i guess')
+		}
+
+	}
+
+	
+	const handleLogout = (event) => {
+		event.preventDefault();
+		
 		window.localStorage.removeItem('loggedBlogAppUser')
 		blogService.setToken('')
 		setUser(null)
 	}
+	
+	const createBlogForm = () => (
+		<>
+			<h2>create new</h2>
+			<form>
+				<div>
+					title
+					<input
+						type='text'
+						value={title}
+						name='Title'
+						onChange={({ target }) => setTitle(target.value)}
+					></input>
+				</div>
+				<div>
+					author
+					<input
+						type='text'
+						value={author}
+						name='Author'
+						onChange={({ target }) => setAuthor(target.value)}
+					></input>
+				</div>
+				<div>
+					url
+					<input
+						type='text'
+						value={url}
+						name='Url'
+						onChange={({ target }) => setUrl(target.value)}
+					></input>
+				</div>
+				<button type='submit' onClick={handleCreateBlog}>create</button>
+			</form>
+		</>
+	)
 
 	const loginForm = () => (
 		<>
@@ -82,6 +138,7 @@ const App = () => {
 	return (
 		<div>
 			<h2>blogs</h2>
+			{createBlogForm()}
 			{blogs.map(blog =>
 				<Blog key={blog.id} blog={blog} />
 			)}
