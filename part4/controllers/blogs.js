@@ -7,12 +7,18 @@ const jwt = require('jsonwebtoken');
 blogsRouter.get('/', async (request, response) => {
     const blogs = await Blog.find({})
 		.populate('user', { username: 1, name: 1, id: 1 })
-  	response.json(blogs).end();
+  	response.json(blogs)
 })
   
 blogsRouter.post('/', async (request, response) => {
 	const body = request.body;
 	const user = request.user;
+
+	console.log(user)
+
+	if (user === null) {
+		response.status(401).json({ error: "invalid token" })
+	}
 
 	const blog = new Blog({
 		title: body.title,

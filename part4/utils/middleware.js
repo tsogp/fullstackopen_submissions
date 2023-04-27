@@ -21,6 +21,8 @@ const errorHandler = (error, request, response, next) => {
         return response.status(400).send({ error: 'malformatted id' })
     } else if (error.name === 'ValidationError') {
         return response.status(400).json({ error: error.message })
+    } else if (error.name ===  'JsonWebTokenError') {
+        return response.status(400).json({ error: error.message })
     }
 
     next(error)
@@ -31,7 +33,7 @@ const tokenExtractor = (request, response, next) => {
     if (authorization && authorization.startsWith('Bearer ')) {
         request['token'] = authorization.replace('Bearer ', '');
     } else {
-        request.headers['token'] = null;
+        request['token'] = null;
     } 
 
     next();
@@ -43,8 +45,8 @@ const userExtractor = async (request, response, next) => {
     const decodedToken = jwt.decode(token, process.env.SECRET);
     if (!decodedToken) {
         request['user'] = null;
-        response.status(401).json({ error: 'invalid token' });
     } else {
+        console.log('decoded id: ', decodedToken)
         const user = await User.findById(decodedToken.id);
         request['user'] = user;
     }
