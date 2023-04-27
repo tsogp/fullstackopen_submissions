@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
 const App = () => {
 	const [blogs, setBlogs] = useState([])
 	const [username, setUsername] = useState('')
+	const [message, setMessage] = useState('')
 	const [password, setPassword] = useState('')
 	const [title, setTitle] = useState('')
 	const [author, setAuthor] = useState('')
@@ -39,7 +41,10 @@ const App = () => {
 			setUsername('');
 			setPassword('')
 		} catch (exception) {
-			console.log('wrong credentials lol');
+			setMessage('wrong credentials lol')
+			setTimeout(() => {
+				setMessage("")
+			}, 5000)
 		}
 	}
 
@@ -53,12 +58,16 @@ const App = () => {
 			setAuthor('')
 			setUrl('')
 			setBlogs(blogs.concat(blog))
+
+			setMessage(blog.title + " created!")
+			setTimeout(() => {
+				setMessage("")
+			}, 5000)
 		} catch (exception) {
 			console.log('wrong credentials or no title or author i guess')
 		}
 
 	}
-
 	
 	const handleLogout = (event) => {
 		event.preventDefault();
@@ -137,6 +146,7 @@ const App = () => {
 
 	return (
 		<div>
+			<Notification message={message}></Notification>
 			<h2>blogs</h2>
 			{createBlogForm()}
 			{blogs.map(blog =>
