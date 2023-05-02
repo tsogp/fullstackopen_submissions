@@ -8,6 +8,8 @@ const LoginForm = ({ loginUser }) => {
         event.preventDefault()
         loginUser({ username, password })
 
+        console.log('here')
+
         setUsername('')
         setPassword('')
     }
@@ -34,7 +36,7 @@ const LoginForm = ({ loginUser }) => {
                         onChange={event => setPassword(event.target.value)}
                     ></input>
                 </div>
-                <button type='submit'>login</button>
+                <button type='submit' onClick={handleLogin}>login</button>
             </form>
         </>
     )

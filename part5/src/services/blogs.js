@@ -26,5 +26,12 @@ const like = async (newObject) => {
     return response.data
 }
 
+const del = async (id) => {
+    const config = { headers: { authorization: token }}
+
+    const response = await axios.delete(baseUrl + '/' + id, config);
+    return response.data
+}
+
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getAll, setToken, create, like }
+export default { getAll, setToken, create, like, del }

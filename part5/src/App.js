@@ -45,6 +45,7 @@ const App = () => {
 				setMessage("")
 			}, 5000)
 		}
+		
 	}
 
 	const handleCreateBlog = newObject => {
@@ -83,15 +84,18 @@ const App = () => {
 		let newBlogs = [...blogs]
 		newBlogs[index] = newBlog; 
 
-		console.log(newBlogs)
-
 		await blogService.like(newBlog)
 		setBlogs(newBlogs)
 	}
 
+	const handleDelete = async (b, index) => {	
+		await blogService.del(b._id)
+
+		setBlogs(blogs.filter(blog => blog !== b))
+	}
+
 	const sortLikes = () => {
 		setBlogs([...blogs].sort((a, b) => a.likes - b.likes))
-		console.log(blogs)
 	}
 
 	if (user === null) {
@@ -108,6 +112,7 @@ const App = () => {
 				<>
 					<Blog key={blog.id} blog={blog} />
 					<button onClick={() => handleLike(blog, index)}>like</button>
+					<button onClick={() => handleDelete(blog, index)}>delete</button>
 				</>
 			)}
 			<button onClick={handleLogout}>logout</button>
