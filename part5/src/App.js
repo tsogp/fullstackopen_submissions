@@ -83,8 +83,15 @@ const App = () => {
 		let newBlogs = [...blogs]
 		newBlogs[index] = newBlog; 
 
+		console.log(newBlogs)
+
 		await blogService.like(newBlog)
 		setBlogs(newBlogs)
+	}
+
+	const sortLikes = () => {
+		setBlogs([...blogs].sort((a, b) => a.likes - b.likes))
+		console.log(blogs)
 	}
 
 	if (user === null) {
@@ -96,6 +103,7 @@ const App = () => {
 			<Notification message={message}></Notification>
 			<h2>blogs</h2>
 			{createBlogForm()}
+			<button onClick={sortLikes}>sort with likes</button>
 			{blogs.map((blog, index) =>
 				<>
 					<Blog key={blog.id} blog={blog} />
