@@ -66,7 +66,7 @@ const App = () => {
 	}
 	
 	const createBlogForm = () => (
-		<Toggable buttonLabel='create note' ref={hideBlogRef}>
+		<Toggable buttonLabel='create blog' ref={hideBlogRef}>
 			<BlogForm addBlog={handleCreateBlog}></BlogForm>
 		</Toggable>
 	)
@@ -77,6 +77,16 @@ const App = () => {
 		</Toggable>
 	)
 
+	const handleLike = async (b, index) => {
+		const newBlog = { ...b, likes: b.likes + 1 }
+		
+		let newBlogs = [...blogs]
+		newBlogs[index] = newBlog; 
+
+		await blogService.like(newBlog)
+		setBlogs(newBlogs)
+	}
+
 	if (user === null) {
 		return loginForm();
 	}
@@ -86,8 +96,11 @@ const App = () => {
 			<Notification message={message}></Notification>
 			<h2>blogs</h2>
 			{createBlogForm()}
-			{blogs.map(blog =>
-				<Blog key={blog.id} blog={blog} />
+			{blogs.map((blog, index) =>
+				<>
+					<Blog key={blog.id} blog={blog} />
+					<button onClick={() => handleLike(blog, index)}>like</button>
+				</>
 			)}
 			<button onClick={handleLogout}>logout</button>
 		</div>
