@@ -9,7 +9,7 @@ const Anecdote = ({ anecdote }) => {
   }
 
   return (
-    <div key={anecdote.id}>
+    <div>
       <div>
         {anecdote.content}
       </div>
@@ -22,13 +22,13 @@ const Anecdote = ({ anecdote }) => {
 }
 
 const Anecdotes = () => {
-  const anecdotes = useSelector(state => state)
-  
+  const anecdotes = useSelector(state => state.anecdotes.filter(a => a.content.toLowerCase().includes(state.filter.toLowerCase())))
+
   return (
     <div>
       <h2>Anecdotes</h2>
       {anecdotes.sort((a1, a2) => a2.votes - a1.votes).map(anecdote => 
-        <Anecdote anecdote={anecdote} /> 
+        <Anecdote key={anecdote.id} anecdote={anecdote} /> 
       )}
     </div>
   )
