@@ -3,6 +3,7 @@ const Blog = require('../models/blog')
 const mongoose = require('mongoose')
 const User = require('../models/user')
 const jwt = require('jsonwebtoken');
+const blog = require('../models/blog');
 
 blogsRouter.get('/', async (request, response) => {
     const blogs = await Blog.find({})
@@ -17,7 +18,7 @@ blogsRouter.post('/', async (request, response) => {
 	console.log(user)
 
 	if (user === null) {
-		response.status(401).json({ error: "invalid token" })
+		response.status(401).json({ error: "invalid token" }).end()
 	}
 
 	const blog = new Blog({
@@ -53,7 +54,13 @@ blogsRouter.put('/:id', async (request, response) => {
 		title: request.body.title,
 		author: request.body.author,
 		url: request.body.url,
-		likes: request.body.likes 
+		likes: request.body.likes,
+		user: request.body.user.id
+	}
+	const user = request.user;
+
+	if (user === null) {
+		return response.status(401).json({ error: 'you are not logged in' });
 	}
 
 	const result = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true });
